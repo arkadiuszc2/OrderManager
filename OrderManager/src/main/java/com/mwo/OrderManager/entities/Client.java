@@ -9,7 +9,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="CLIENTS")
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
+
 public class Client {
 
   @Id
@@ -25,7 +28,7 @@ public class Client {
   private String name;
   private String surname;
   private String email;
-  @OneToMany
+  @OneToMany(mappedBy = "client")
   private List<Order> orders;
 
 }
