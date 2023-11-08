@@ -1,8 +1,10 @@
 package com.mwo.OrderManager.controllers;
 
-import com.mwo.OrderManager.entities.OrderDto;
+import com.mwo.OrderManager.entities.CreateOrderDto;
+import com.mwo.OrderManager.entities.Order;
 import com.mwo.OrderManager.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,16 +21,16 @@ public class OrderController {
   private final OrderService orderService;
 
   @PostMapping
-  public OrderDto createProduct(@RequestBody OrderDto orderDto){
-    return orderService.createOrder(orderDto);
+  public Order createProduct(@RequestBody CreateOrderDto createOrderDto){
+    return orderService.createOrder(createOrderDto);
   }
   @GetMapping("{id}")
-  public OrderDto getOrderById(@PathVariable Long id){
-    return orderService.geOrderById(id);
+  public Order getOrderById(@PathVariable Long id){
+    return orderService.getOrderById(id);
   }
   @PutMapping("/{id}")
-  public void updateOrderById(@PathVariable Long id, @RequestBody OrderDto orderDto){
-    orderService.updateOrderById(id, orderDto);
+  public void updateOrderById(@PathVariable Long id, @RequestBody CreateOrderDto createOrderDto){
+    orderService.updateOrderById(id, createOrderDto);
   }
   @DeleteMapping("/{id}")
   public void deleteProductById(@PathVariable Long id){
