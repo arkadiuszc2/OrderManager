@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class ClientDto {
+public class ViewProductDto {
   private Long id;
   private String name;
-  private String surname;
-  private String email;
-
+  private double price;
+  private Long amountInStore;
 
 }

@@ -1,13 +1,13 @@
 package com.mwo.OrderManager.services;
 
 import com.mwo.OrderManager.entities.Client;
-import com.mwo.OrderManager.entities.ClientDto;
+import com.mwo.OrderManager.entities.CreateClientDto;
+import com.mwo.OrderManager.entities.ViewClientDto;
+import com.mwo.OrderManager.mappings.ClientCreateMapper;
 import com.mwo.OrderManager.mappings.ClientMapper;
 import com.mwo.OrderManager.repositories.ClientRepository;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import javax.management.BadAttributeValueExpException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,31 +18,30 @@ import org.springframework.web.server.ResponseStatusException;
 public class ClientService {
   private final ClientRepository clientRepository;
   private final ClientMapper clientMapper;
-  public ClientDto createClient(ClientDto clientDto){
-    Client client = clientRepository.save(clientMapper.toEntity(clientDto));
-    return clientMapper.toDto(client);    //changed here
+  private ClientCreateMapper clientCreateMapper;
+  public ViewClientDto createClient(CreateClientDto createClientDto){
+    Client client = clientRepository.save(clientCreateMapper.toEntity(createClientDto));
+    return clientMapper.toDto(client);
   }
 
-  public ClientDto getClientById(Long id){
-    return clientRepository.findById(id).map(clientMapper::toDto).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-        "Client with provided id does not exist"));
+  public ViewClientDto getClientById(Long id){
+    return clientRepository.findById(id).map(clientMapper::toDto).orElseThrow(
+        NoSuchElementException::new);
   }
 
-  public void updateClientById(Long id, ClientDto clientDto){
-    if (!Objects.equals(id, clientDto.getId())){
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Provided id and client id are not equal");
+  public void updateClientById(Long id, ViewClientDto viewClientDto){
+    if (!Objects.equals(id, viewClientDto.getId())){
+      throw new IllegalArgumentException();
     }
-    Client client = clientRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,
-        "Client with provided id does not exist"));
-    client.setEmail(clientDto.getEmail());
-    client.setName(clientDto.getName());
-    client.setSurname(clientDto.getSurname());
+    Client client = clientRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    client.setEmail(viewClientDto.getEmail());
+    client.setName(viewClientDto.getName());
+    client.setSurname(viewClientDto.getSurname());
     clientRepository.save(client);
   }
 
   public void deleteClientById(Long id){
-    clientRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,
-        "Client with provided id does not exist"));
+    clientRepository.findById(id).orElseThrow(NoSuchElementException::new);
     clientRepository.deleteById(id);
   }
 

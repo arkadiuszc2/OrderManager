@@ -1,11 +1,11 @@
 package com.mwo.OrderManager.mappings;
 
 import com.mwo.OrderManager.entities.Client;
-import com.mwo.OrderManager.entities.ClientDto;
+import com.mwo.OrderManager.entities.ViewClientDto;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface ClientMapper {
-  ClientDto toDto(Client client);
-  Client toEntity(ClientDto clientDto);
+  ViewClientDto toDto(Client client);
+  Client toEntity(ViewClientDto viewClientDto);
 }

@@ -3,14 +3,13 @@ package com.mwo.OrderManager.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.mapstruct.Mapper;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
-  private Long id;
+@NoArgsConstructor
+public class CreateProductDto {
   private String name;
   private double price;
   private Long amountInStore;
-
 }
