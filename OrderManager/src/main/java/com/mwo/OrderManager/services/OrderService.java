@@ -65,6 +65,19 @@ public class OrderService {
             .productsIds(productIds).build();
   }
 
+  public List<ViewOrderDto> getAllOrders(){
+    List<Order> ordersList = orderRepository.findAll().stream().toList();
+    List<ViewOrderDto> viewOrdersList = new ArrayList<>();
+    List<Long> productsIds = new ArrayList<>();
+    for(Order order : ordersList){
+      for(Product product : order.getProducts()){
+        productsIds.add(product.getId());
+      }
+      viewOrdersList.add(ViewOrderDto.builder().id(order.getId()).client_id(order.getClient().getId()).
+          productsIds(productsIds).status(order.getStatus()).build());
+    }
+    return viewOrdersList;
+  }
   public void updateOrderById(Long id, ViewOrderDto viewOrderDto) {
     if (!Objects.equals(id, viewOrderDto.getId())) {
       throw new IllegalArgumentException();

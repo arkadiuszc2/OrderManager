@@ -6,8 +6,10 @@ import com.mwo.OrderManager.entities.ViewProductDto;
 import com.mwo.OrderManager.mappings.ProductCreateMapper;
 import com.mwo.OrderManager.mappings.ProductMapper;
 import com.mwo.OrderManager.repositories.ProductRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import javax.swing.text.View;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class ProductService {
   public ViewProductDto getProductById(Long id){
     return productRepository.findById(id).map(productMapper::toDto).orElseThrow(
         NoSuchElementException::new);
+  }
+  public List<ViewProductDto> getAllProducts(){
+    return productRepository.findAll().stream().map(productMapper::toDto).toList();
   }
 
   public void updateProductById(Long id, ViewProductDto viewProductDto){

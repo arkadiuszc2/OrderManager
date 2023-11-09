@@ -4,6 +4,7 @@ import com.mwo.OrderManager.entities.Client;
 import com.mwo.OrderManager.entities.CreateClientDto;
 import com.mwo.OrderManager.entities.ViewClientDto;
 import com.mwo.OrderManager.services.ClientService;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,10 @@ public class ClientController {
           "Client with provided id does not exist");
     }
     return viewClientDto;
+  }
+  @GetMapping
+  public List<ViewClientDto> getAllClients(){
+    return clientService.getAllClients();
   }
   @PutMapping("/{id}")
   public void updateClientById(@PathVariable Long id, @RequestBody ViewClientDto viewClientDto){

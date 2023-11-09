@@ -4,6 +4,7 @@ import com.mwo.OrderManager.entities.CreateProductDto;
 import com.mwo.OrderManager.entities.ViewOrderDto;
 import com.mwo.OrderManager.entities.ViewProductDto;
 import com.mwo.OrderManager.services.ProductService;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,10 @@ public class ProductController {
           "Product with provided id does not exist");
     }
     return viewProductDto;
+  }
+  @GetMapping
+  public List<ViewProductDto> getAllProducts(){
+    return productService.getAllProducts();
   }
   @PutMapping("/{id}")
   public void updateProductById(@PathVariable Long id, @RequestBody ViewProductDto ViewProductDto){

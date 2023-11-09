@@ -6,8 +6,10 @@ import com.mwo.OrderManager.entities.ViewClientDto;
 import com.mwo.OrderManager.mappings.ClientCreateMapper;
 import com.mwo.OrderManager.mappings.ClientMapper;
 import com.mwo.OrderManager.repositories.ClientRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class ClientService {
   private final ClientRepository clientRepository;
   private final ClientMapper clientMapper;
-  private ClientCreateMapper clientCreateMapper;
+  private final ClientCreateMapper clientCreateMapper;
   public ViewClientDto createClient(CreateClientDto createClientDto){
     Client client = clientRepository.save(clientCreateMapper.toEntity(createClientDto));
     return clientMapper.toDto(client);
@@ -27,6 +29,9 @@ public class ClientService {
   public ViewClientDto getClientById(Long id){
     return clientRepository.findById(id).map(clientMapper::toDto).orElseThrow(
         NoSuchElementException::new);
+  }
+  public List<ViewClientDto> getAllClients(){
+    return clientRepository.findAll().stream().map(clientMapper::toDto).toList();
   }
 
   public void updateClientById(Long id, ViewClientDto viewClientDto){

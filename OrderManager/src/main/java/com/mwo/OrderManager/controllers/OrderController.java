@@ -4,6 +4,7 @@ import com.mwo.OrderManager.entities.CreateOrderDto;
 import com.mwo.OrderManager.entities.ViewOrderDto;
 import com.mwo.OrderManager.enums.Status;
 import com.mwo.OrderManager.services.OrderService;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,10 @@ public class OrderController {
           "Order with provided id does not exist");
     }
     return viewOrderDto;
+  }
+  @GetMapping
+  public List<ViewOrderDto> getAllOrders(){
+    return orderService.getAllOrders();
   }
   @PutMapping("/{id}")
   public void updateOrderById(@PathVariable Long id, @RequestBody ViewOrderDto viewOrderDto){
