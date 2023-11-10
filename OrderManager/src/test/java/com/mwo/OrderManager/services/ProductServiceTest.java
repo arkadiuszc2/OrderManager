@@ -58,6 +58,7 @@ class ProductServiceTest {
         .price(price)
         .amountInStore(amountInsStore)
         .build();
+
     CreateProductDto createProductDto = productCreateMapper.toDto(product);
     when(productRepository.save(any())).thenReturn(product);
     // Act
@@ -144,13 +145,13 @@ class ProductServiceTest {
   void updateProductById_forMismatchedId_shouldThrowIllegalArgumentException() {
     // Arrange
     Long productId = 1L;
-    Long mismatcheId = 2L;
+    Long mismatchedId = 2L;
     String name = "product";
     double price = 10.0;
     Long amountInsStore = 3L;
 
     ViewProductDto updatedProductDto = ViewProductDto.builder()
-        .id(mismatcheId)
+        .id(mismatchedId)
         .name(name)
         .price(price)
         .amountInStore(amountInsStore)

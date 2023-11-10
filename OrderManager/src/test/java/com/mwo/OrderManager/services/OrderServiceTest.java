@@ -65,7 +65,6 @@ class OrderServiceTest {
     Product product2 = Product.builder().id(product2Id).amountInStore(product2Amount).build();
 
     Order order = Order.builder().client(client)
-
         .products(List.of(product1, product2)).status(Status.NEW).build();
 
     ViewOrderDto expected = ViewOrderDto.builder().client_id(client_id).status(Status.NEW)
