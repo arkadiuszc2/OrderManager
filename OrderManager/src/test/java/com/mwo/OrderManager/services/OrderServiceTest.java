@@ -46,7 +46,6 @@ class OrderServiceTest {
     Mockito.reset(clientRepository, productRepository, orderRepository);
   }
 
-  @ParameterizedTest
   @Test
   void createOrder_forValidClientAndValidProduct_shouldReturnCorrectOrder() {
     // Arrange
