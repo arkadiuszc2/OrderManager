@@ -41,7 +41,8 @@ public class OrderService {
       if (product.getAmountInStore().equals(0L)) {
         throw new IllegalStateException("No product in store!");
       }
-
+      product.setAmountInStore(product.getAmountInStore()-1L);
+      productRepository.save(product);
       productsList.add(product);
     }
 
@@ -127,7 +128,7 @@ public class OrderService {
     orderRepository.save(order);
   }
 
-  public void updateOrdersStatusById(Long id, Status status){
+  public void updateOrderStatusById(Long id, Status status){
     Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
     order.setStatus(status);
     orderRepository.save(order);

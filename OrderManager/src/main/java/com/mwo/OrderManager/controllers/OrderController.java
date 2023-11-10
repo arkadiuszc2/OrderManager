@@ -69,7 +69,7 @@ public class OrderController {
   @PutMapping("/{id}/{status}")
   public void updateOrderStatusById(@PathVariable Long id, @PathVariable Status status){
     try{
-      orderService.updateOrdersStatusById(id, status);
+      orderService.updateOrderStatusById(id, status);
     }
     catch(NoSuchElementException e){
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
