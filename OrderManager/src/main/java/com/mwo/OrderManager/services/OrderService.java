@@ -38,7 +38,7 @@ public class OrderService {
       product = productRepository.findById(productId).
           orElseThrow(NoSuchElementException::new);
 
-      if (product.getAmountInStore().equals(0L)) {
+      if (product.getAmountInStore() <= 0L) {
         throw new IllegalStateException("No product in store!");
       }
       product.setAmountInStore(product.getAmountInStore()-1L);
@@ -104,7 +104,7 @@ public class OrderService {
       product = productRepository.findById(productId).
           orElseThrow(NoSuchElementException::new);
 
-      if (product.getAmountInStore().equals(0L)) {
+      if (product.getAmountInStore()<=0L) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough products in store!");
       }
 

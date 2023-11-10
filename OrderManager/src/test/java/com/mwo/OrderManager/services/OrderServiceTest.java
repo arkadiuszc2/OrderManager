@@ -21,6 +21,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -43,6 +46,7 @@ class OrderServiceTest {
     Mockito.reset(clientRepository, productRepository, orderRepository);
   }
 
+  @ParameterizedTest
   @Test
   void createOrder_forValidClientAndValidProduct_shouldReturnCorrectOrder() {
     // Arrange
@@ -113,22 +117,18 @@ class OrderServiceTest {
     // Act and Assert
     assertThrows(NoSuchElementException.class, () -> orderService.createOrder(createOrderDto));
   }
-
-  @Test
-  void createOrder_forProductWithInvalidAmount_shouldReturnIllegalStateException() {
+  @ParameterizedTest
+  @CsvFileSource(files = "src/test/resources/test.csv", numLinesToSkip = 1)
+  void createOrder_forProductWithInvalidAmount_shouldReturnIllegalStateException(Long client_id, Long product1Id,
+      Long product2Id, Long product1Amount, Long product2Amount) {
     // Arrange
-    Long client_id = 1L;
-    Long product1Id = 2L;
-    Long product2Id = 3L;
-    Long products1Amount = 5L;
-    Long product2Amount = 0L;
 
     CreateOrderDto createOrderDto = CreateOrderDto.builder().client_id(client_id)
         .productsIds(List.of(product1Id, product2Id)).build();
 
     Client client = Client.builder().id(client_id).build();
 
-    Product product1 = Product.builder().id(product1Id).amountInStore(products1Amount).build();
+    Product product1 = Product.builder().id(product1Id).amountInStore(product1Amount).build();
 
     Product product2 = Product.builder().id(product2Id).amountInStore(product2Amount).build();
 
@@ -172,6 +172,7 @@ class OrderServiceTest {
     assertThrows(IllegalStateException.class, () -> orderService.createOrder(createOrderDto));
 
   }
+
   @Test
   void getOrderById_forNotExistingOrder_shouldReturnNoSuchElementException() {
     // Arrange
@@ -211,7 +212,7 @@ class OrderServiceTest {
   @Test
   void updateOrderStatusById_forExistingOrder_shouldCorrectlyChangeStatus() {
     // Arrange
-    long orderId = 1L;
+    Long orderId = 1L;
     Status newStatus = Status.DONE;
 
     Order order = Order.builder()
@@ -229,24 +230,28 @@ class OrderServiceTest {
   }
 
   @Test
-  void updateOrderStatusById_forNotExistingOrder_shouldThrowNoSuchElementException()  {
+  void updateOrderStatusById_forNotExistingOrder_shouldThrowNoSuchElementException() {
     // Arrange
-    long nonExistingOrderId = 4L;
+    Long nonExistingOrderId = 4L;
     Status newStatus = Status.DONE;
 
     when(orderRepository.findById(nonExistingOrderId)).thenReturn(Optional.empty());
 
     // Act and Assert
-    assertThrows(NoSuchElementException.class, () -> orderService.updateOrderStatusById(nonExistingOrderId, newStatus));
+    assertThrows(NoSuchElementException.class,
+        () -> orderService.updateOrderStatusById(nonExistingOrderId, newStatus));
   }
-  @Test
-  void deleteOrderById_forExistingOrder_shouldCorrectlyDeleteOrder() {
-    // Arrange
-    Long orderId = 1L;
-    Long product1Id = 2L;
-    Long product1AmountInStore = 1L;
 
-    Product product1 = Product.builder().id(product1Id).amountInStore(product1AmountInStore).build();
+  @ParameterizedTest
+  @CsvSource({
+      "1, 2, 1, 2",
+      "3, 4, 5, 6"
+  })
+  void deleteOrderById_forExistingOrder_shouldCorrectlyDeleteOrder(Long orderId, Long product1Id,
+      Long product1AmountInStore, Long expectedProduct1AmountInStore) {
+    // Arrange
+    Product product1 = Product.builder().id(product1Id).amountInStore(product1AmountInStore)
+        .build();
 
     List<Product> productsList = List.of(product1);
 
@@ -257,7 +262,6 @@ class OrderServiceTest {
         .build();
 
     when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-    Long expectedProduct1AmountInStore = 2L;
     // Act
     orderService.deleteOrderById(orderId);
     Long result = product1.getAmountInStore();
@@ -274,6 +278,7 @@ class OrderServiceTest {
     when(orderRepository.findById(nonExistingOrderId)).thenReturn(Optional.empty());
 
     // Act and Assert
-    assertThrows(NoSuchElementException.class, () -> orderService.deleteOrderById(nonExistingOrderId));
+    assertThrows(NoSuchElementException.class,
+        () -> orderService.deleteOrderById(nonExistingOrderId));
   }
 }
